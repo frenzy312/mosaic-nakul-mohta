@@ -64,20 +64,26 @@ const Index = () => {
 
         {/* Layout handled below */}
 
-        {/* Competitor Table left + AI Insights stack right */}
+        {/* Competitor Table + AI Insights side by side */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2">
             <CompetitorTable competitors={displayCompetitors} />
           </div>
-          <div className="space-y-6">
+          <div>
             <AIInsights />
+          </div>
+        </div>
+
+        {/* Ad Cards left + Gap Detection & White Space right */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            <AdCardGrid ads={filteredAds} />
+          </div>
+          <div className="space-y-6">
             <GapDetection />
             <WhiteSpaceTool />
           </div>
         </div>
-
-        {/* Ad Cards */}
-        <AdCardGrid ads={filteredAds} />
 
         {/* Ad Lifespan Chart - full width at bottom */}
         <AdLifespanChart />
