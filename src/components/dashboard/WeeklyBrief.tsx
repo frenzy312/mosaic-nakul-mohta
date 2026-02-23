@@ -18,22 +18,22 @@ const WeeklyBrief = ({ isOpen }: WeeklyBriefProps) => {
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">Weekly Intelligence Brief</h2>
-          <p className="text-[10px] text-muted-foreground">{weekLabel}</p>
+          
         </div>
       </div>
 
       <div className="space-y-3">
-        {weeklyBriefPoints.map((point, i) => (
-          <div key={i} className="flex gap-3 items-start">
+        {weeklyBriefPoints.map((point, i) =>
+        <div key={i} className="flex gap-3 items-start">
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent flex items-center justify-center mt-0.5">
               <span className="text-[9px] font-bold text-primary">{i + 1}</span>
             </div>
             <p className="text-sm text-foreground leading-relaxed">{point}</p>
           </div>
-        ))}
+        )}
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default WeeklyBrief;
