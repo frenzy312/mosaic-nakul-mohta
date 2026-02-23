@@ -1,12 +1,82 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useMemo } from "react";
+import type { Brand, AdFormat, MessagingTheme, RecencyFilter } from "@/data/mockData";
+import { competitors as allCompetitors, competitorAds } from "@/data/mockData";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import StatsOverview from "@/components/dashboard/StatsOverview";
+import FilterBar from "@/components/dashboard/FilterBar";
+import CompetitorGrid from "@/components/dashboard/CompetitorGrid";
+import AIInsights from "@/components/dashboard/AIInsights";
+import GapDetection from "@/components/dashboard/GapDetection";
+import WhiteSpaceTool from "@/components/dashboard/WhiteSpaceTool";
+import AdLifespanChart from "@/components/dashboard/AdLifespanChart";
+import WeeklyBrief from "@/components/dashboard/WeeklyBrief";
 
 const Index = () => {
+  const [briefOpen, setBriefOpen] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState<Brand | "All">("All");
+  const [selectedFormat, setSelectedFormat] = useState<AdFormat | "All">("All");
+  const [selectedTheme, setSelectedTheme] = useState<MessagingTheme | "All">("All");
+  const [selectedRecency, setSelectedRecency] = useState<RecencyFilter>("All");
+
+  const filteredCompetitors = useMemo(() => {
+    return allCompetitors.filter(c => {
+      if (selectedBrand !== "All" && c.parentBrand !== selectedBrand) return false;
+      if (selectedFormat !== "All" && c.dominantFormat !== selectedFormat) return false;
+      if (selectedTheme !== "All" && c.dominantTheme !== selectedTheme) return false;
+      return true;
+    });
+  }, [selectedBrand, selectedFormat, selectedTheme]);
+
+  const filteredAds = useMemo(() => {
+    return competitorAds.filter(ad => {
+      if (selectedBrand !== "All" && ad.parentBrand !== selectedBrand) return false;
+      if (selectedFormat !== "All" && ad.format !== selectedFormat) return false;
+      if (selectedTheme !== "All" && ad.messagingTheme !== selectedTheme) return false;
+      if (selectedRecency === "New (< 7 days)" && ad.daysActive >= 7) return false;
+      if (selectedRecency === "Top Performers (30+ days)" && !ad.isTopPerformer) return false;
+      if (selectedRecency === "Active" && ad.daysActive > 60) return false;
+      return true;
+    });
+  }, [selectedBrand, selectedFormat, selectedTheme, selectedRecency]);
+
+  // For recency filter, also filter competitors based on whether they have matching ads
+  const displayCompetitors = useMemo(() => {
+    if (selectedRecency === "All") return filteredCompetitors;
+    const competitorNames = new Set(filteredAds.map(a => a.competitor));
+    return filteredCompetitors.filter(c => competitorNames.has(c.name));
+  }, [filteredCompetitors, filteredAds, selectedRecency]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <DashboardHeader onToggleBrief={() => setBriefOpen(!briefOpen)} briefOpen={briefOpen} />
+        <StatsOverview />
+        <FilterBar
+          selectedBrand={selectedBrand} setSelectedBrand={setSelectedBrand}
+          selectedFormat={selectedFormat} setSelectedFormat={setSelectedFormat}
+          selectedTheme={selectedTheme} setSelectedTheme={setSelectedTheme}
+          selectedRecency={selectedRecency} setSelectedRecency={setSelectedRecency}
+        />
+
+        {/* Main content: Competitor Grid + Right Sidebar */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2 space-y-6">
+            <div>
+              <h2 className="section-title mb-3">Competitor Overview</h2>
+              <CompetitorGrid competitors={displayCompetitors} ads={filteredAds} />
+            </div>
+            <AdLifespanChart />
+          </div>
+
+          <div className="space-y-6">
+            <AIInsights />
+            <GapDetection />
+            <WhiteSpaceTool />
+          </div>
+        </div>
       </div>
+
+      <WeeklyBrief isOpen={briefOpen} onClose={() => setBriefOpen(false)} />
     </div>
   );
 };
