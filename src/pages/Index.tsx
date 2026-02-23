@@ -4,7 +4,8 @@ import { competitors as allCompetitors, competitorAds } from "@/data/mockData";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import StatsOverview from "@/components/dashboard/StatsOverview";
 import FilterBar from "@/components/dashboard/FilterBar";
-import CompetitorGrid from "@/components/dashboard/CompetitorGrid";
+import CompetitorTable from "@/components/dashboard/CompetitorTable";
+import AdCardGrid from "@/components/dashboard/AdCardGrid";
 import AIInsights from "@/components/dashboard/AIInsights";
 import GapDetection from "@/components/dashboard/GapDetection";
 import WhiteSpaceTool from "@/components/dashboard/WhiteSpaceTool";
@@ -39,7 +40,6 @@ const Index = () => {
     });
   }, [selectedBrand, selectedFormat, selectedTheme, selectedRecency]);
 
-  // For recency filter, also filter competitors based on whether they have matching ads
   const displayCompetitors = useMemo(() => {
     if (selectedRecency === "All") return filteredCompetitors;
     const competitorNames = new Set(filteredAds.map(a => a.competitor));
@@ -50,6 +50,10 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <DashboardHeader onToggleBrief={() => setBriefOpen(!briefOpen)} briefOpen={briefOpen} />
+
+        {/* Weekly Brief - shown inline when toggled on */}
+        <WeeklyBrief isOpen={briefOpen} />
+
         <StatsOverview />
         <FilterBar
           selectedBrand={selectedBrand} setSelectedBrand={setSelectedBrand}
@@ -58,13 +62,13 @@ const Index = () => {
           selectedRecency={selectedRecency} setSelectedRecency={setSelectedRecency}
         />
 
-        {/* Main content: Competitor Grid + Right Sidebar */}
+        {/* Competitor Table */}
+        <CompetitorTable competitors={displayCompetitors} />
+
+        {/* Ads left + Insights right */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2 space-y-6">
-            <div>
-              <h2 className="section-title mb-3">Competitor Overview</h2>
-              <CompetitorGrid competitors={displayCompetitors} ads={filteredAds} />
-            </div>
+            <AdCardGrid ads={filteredAds} />
             <AdLifespanChart />
           </div>
 
@@ -75,8 +79,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-
-      <WeeklyBrief isOpen={briefOpen} onClose={() => setBriefOpen(false)} />
     </div>
   );
 };

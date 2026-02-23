@@ -1,4 +1,5 @@
-import { Activity, FileText } from "lucide-react";
+import { Activity } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 interface DashboardHeaderProps {
   onToggleBrief: () => void;
@@ -18,17 +19,16 @@ const DashboardHeader = ({ onToggleBrief, briefOpen }: DashboardHeaderProps) => 
         </div>
       </div>
 
-      <button
-        onClick={onToggleBrief}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-          briefOpen
-            ? 'bg-primary text-primary-foreground shadow-md'
-            : 'bg-secondary text-secondary-foreground hover:bg-accent'
-        }`}
-      >
-        <FileText className="h-4 w-4" />
-        Weekly Brief
-      </button>
+      <div className="flex items-center gap-3">
+        <label htmlFor="weekly-brief-toggle" className="text-sm font-medium text-foreground cursor-pointer">
+          Weekly Brief
+        </label>
+        <Switch
+          id="weekly-brief-toggle"
+          checked={briefOpen}
+          onCheckedChange={onToggleBrief}
+        />
+      </div>
     </header>
   );
 };
