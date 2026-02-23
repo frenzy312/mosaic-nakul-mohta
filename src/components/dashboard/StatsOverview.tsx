@@ -10,10 +10,10 @@ const StatsOverview = () => {
   );
 
   const stats = [
-    { label: "Total Ads Tracked", value: totalAds.toLocaleString(), icon: BarChart3, change: "+12%", up: true },
-    { label: "Currently Active", value: activeAds.toLocaleString(), icon: Eye, change: "+8%", up: true },
-    { label: "Top Performers", value: topPerformers.toLocaleString(), icon: Trophy, change: "+3", up: true },
-    { label: "Avg. Days Active", value: `${avgDaysActive}d`, icon: Zap, change: "-2d", up: false },
+    { label: "Total Ads Tracked", value: totalAds.toLocaleString(), icon: BarChart3, change: "+34%", up: true },
+    { label: "Currently Active", value: activeAds.toLocaleString(), icon: Eye, change: "+22%", up: true },
+    { label: "Top Performers", value: topPerformers.toLocaleString(), icon: Trophy, change: "+18", up: true },
+    { label: "Avg. Days Active", value: `${avgDaysActive}d`, icon: Zap, change: "+5d", up: true },
   ];
 
   return (
