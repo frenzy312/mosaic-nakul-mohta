@@ -62,22 +62,25 @@ const Index = () => {
           selectedRecency={selectedRecency} setSelectedRecency={setSelectedRecency}
         />
 
-        {/* Competitor Table */}
-        <CompetitorTable competitors={displayCompetitors} />
+        {/* Layout handled below */}
 
-        {/* Ads left + Insights right */}
+        {/* Competitor Table left + AI Insights stack right */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <div className="xl:col-span-2 space-y-6">
-            <AdCardGrid ads={filteredAds} />
-            <AdLifespanChart />
+          <div className="xl:col-span-2">
+            <CompetitorTable competitors={displayCompetitors} />
           </div>
-
           <div className="space-y-6">
             <AIInsights />
             <GapDetection />
             <WhiteSpaceTool />
           </div>
         </div>
+
+        {/* Ad Cards */}
+        <AdCardGrid ads={filteredAds} />
+
+        {/* Ad Lifespan Chart - full width at bottom */}
+        <AdLifespanChart />
       </div>
     </div>
   );
