@@ -1,6 +1,6 @@
-import { useState } from "react";
 import type { Brand, AdFormat, MessagingTheme, RecencyFilter } from "@/data/mockData";
-import { Filter, X } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Filter } from "lucide-react";
 
 interface FilterBarProps {
   selectedBrand: Brand | "All";
@@ -19,79 +19,69 @@ const FilterBar = ({
   selectedTheme, setSelectedTheme,
   selectedRecency, setSelectedRecency,
 }: FilterBarProps) => {
-  const [expanded, setExpanded] = useState(true);
-
   const brands: (Brand | "All")[] = ["All", "Man Matters", "Be Bodywise", "Little Joys"];
   const formats: (AdFormat | "All")[] = ["All", "Video", "Static", "Carousel"];
   const themes: (MessagingTheme | "All")[] = ["All", "Science-Based", "Influencer-Led", "UGC", "Discount/Offer", "Testimonial", "Lifestyle"];
   const recencies: RecencyFilter[] = ["All", "New (< 7 days)", "Active", "Top Performers (30+ days)"];
 
-  const hasFilters = selectedBrand !== "All" || selectedFormat !== "All" || selectedTheme !== "All" || selectedRecency !== "All";
-
-  const clearAll = () => {
-    setSelectedBrand("All");
-    setSelectedFormat("All");
-    setSelectedTheme("All");
-    setSelectedRecency("All");
-  };
-
-  const Chip = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
-    <button
-      onClick={onClick}
-      className={`filter-chip ${active ? 'filter-chip-active' : 'filter-chip-inactive'}`}
-    >
-      {label}
-    </button>
-  );
-
   return (
     <div className="stat-card animate-fade-in">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-2 shrink-0">
           <Filter className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold text-foreground">Filters</h3>
-          {hasFilters && (
-            <button onClick={clearAll} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-              <X className="h-3 w-3" /> Clear all
-            </button>
-          )}
+          <span className="text-sm font-semibold text-foreground">Filters</span>
         </div>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {expanded ? "Collapse" : "Expand"}
-        </button>
-      </div>
 
-      {expanded && (
-        <div className="space-y-4">
-          <div>
-            <p className="section-title mb-2">Brand</p>
-            <div className="flex flex-wrap gap-2">
-              {brands.map(b => <Chip key={b} label={b} active={selectedBrand === b} onClick={() => setSelectedBrand(b)} />)}
-            </div>
+        <div className="flex items-center gap-3 flex-wrap flex-1">
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">Brand</label>
+            <Select value={selectedBrand} onValueChange={(v) => setSelectedBrand(v as Brand | "All")}>
+              <SelectTrigger className="w-[160px] h-9 text-sm bg-card">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-card border z-50">
+                {brands.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
-          <div>
-            <p className="section-title mb-2">Format</p>
-            <div className="flex flex-wrap gap-2">
-              {formats.map(f => <Chip key={f} label={f} active={selectedFormat === f} onClick={() => setSelectedFormat(f)} />)}
-            </div>
+
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">Format</label>
+            <Select value={selectedFormat} onValueChange={(v) => setSelectedFormat(v as AdFormat | "All")}>
+              <SelectTrigger className="w-[130px] h-9 text-sm bg-card">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-card border z-50">
+                {formats.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
-          <div>
-            <p className="section-title mb-2">Messaging Theme</p>
-            <div className="flex flex-wrap gap-2">
-              {themes.map(t => <Chip key={t} label={t} active={selectedTheme === t} onClick={() => setSelectedTheme(t)} />)}
-            </div>
+
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">Theme</label>
+            <Select value={selectedTheme} onValueChange={(v) => setSelectedTheme(v as MessagingTheme | "All")}>
+              <SelectTrigger className="w-[160px] h-9 text-sm bg-card">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-card border z-50">
+                {themes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
-          <div>
-            <p className="section-title mb-2">Recency</p>
-            <div className="flex flex-wrap gap-2">
-              {recencies.map(r => <Chip key={r} label={r} active={selectedRecency === r} onClick={() => setSelectedRecency(r)} />)}
-            </div>
+
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-muted-foreground whitespace-nowrap">Recency</label>
+            <Select value={selectedRecency} onValueChange={(v) => setSelectedRecency(v as RecencyFilter)}>
+              <SelectTrigger className="w-[200px] h-9 text-sm bg-card">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-card border z-50">
+                {recencies.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
