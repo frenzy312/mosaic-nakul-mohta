@@ -1,11 +1,20 @@
+import { useMemo } from "react";
 import { FileText } from "lucide-react";
 import { weeklyBriefPoints } from "@/data/mockData";
+import { startOfWeek, endOfWeek, format } from "date-fns";
 
 interface WeeklyBriefProps {
   isOpen: boolean;
 }
 
 const WeeklyBrief = ({ isOpen }: WeeklyBriefProps) => {
+  const weekLabel = useMemo(() => {
+    const now = new Date();
+    const start = startOfWeek(now, { weekStartsOn: 1 });
+    const end = endOfWeek(now, { weekStartsOn: 1 });
+    return `Week of ${format(start, "MMM d")}–${format(end, "d, yyyy")}`;
+  }, []);
+
   if (!isOpen) return null;
 
   return (
@@ -16,7 +25,7 @@ const WeeklyBrief = ({ isOpen }: WeeklyBriefProps) => {
         </div>
         <div>
           <h2 className="text-sm font-bold text-foreground">Weekly Intelligence Brief</h2>
-          <p className="text-[10px] text-muted-foreground">Week of Feb 17–23, 2026</p>
+          <p className="text-[10px] text-muted-foreground">{weekLabel}</p>
         </div>
       </div>
 
