@@ -1,4 +1,5 @@
 import { Star, Clock, Video, Image, Layers } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import type { CompetitorAd } from "@/data/mockData";
 
 interface AdCardGridProps {
@@ -33,14 +34,26 @@ const AdCardGrid = ({ ads }: AdCardGridProps) => {
         {ads.map(ad => {
           const FormatIcon = formatIcon[ad.format] || Video;
           return (
-            <div key={ad.id} className="stat-card relative animate-fade-in">
+            <div key={ad.id} className="stat-card relative animate-fade-in overflow-hidden">
               {/* Top Performer Badge */}
               {ad.isTopPerformer && (
-                <div className="absolute top-3 right-3 badge-performer flex items-center gap-1">
+                <div className="absolute top-3 right-3 badge-performer flex items-center gap-1 z-10">
                   <Star className="h-3 w-3 fill-primary" />
                   Top
                 </div>
               )}
+
+              {/* Ad Image */}
+              <div className="mb-3 rounded-lg overflow-hidden border border-border/50">
+                <AspectRatio ratio={16 / 9}>
+                  <img
+                    src={ad.imageUrl}
+                    alt={`${ad.competitor} - ${ad.headline}`}
+                    className="object-cover w-full h-full"
+                    loading="lazy"
+                  />
+                </AspectRatio>
+              </div>
 
               {/* Header */}
               <div className="mb-2">
@@ -70,7 +83,6 @@ const AdCardGrid = ({ ads }: AdCardGridProps) => {
                   {ad.daysActive} days
                 </div>
                 <span className="text-muted-foreground">{ad.platform}</span>
-                <span className="text-muted-foreground font-medium">{ad.estimatedSpend}</span>
                 <span className="text-primary font-medium">{ad.engagement} eng.</span>
               </div>
             </div>
